@@ -19,7 +19,7 @@ class MentaRayMessagingApp extends StatelessWidget {
     return MaterialApp(
       title: 'Menta-Ray Messaging',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 1, 21, 49)),
       ),
       home: const MessagingScreen(),
     );
@@ -93,7 +93,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                     children: [
                       const Text(
                         "Live Message:",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 1, 21, 49)),
                       ),
                       const SizedBox(height: 8),
                       Text(_currentMessage),
