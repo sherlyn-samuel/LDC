@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -5,9 +6,14 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    runApp(MaterialApp(home: Scaffold(body: Center(child: Text('Failed to start: $e')))));
+    return;
+  }
   runApp(const MentaRayMessagingApp());
 }
 
@@ -19,69 +25,114 @@ class MentaRayMessagingApp extends StatelessWidget {
     return MaterialApp(
       title: 'Menta-Ray Messaging',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 1, 21, 49)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 1, 21, 49)),
       ),
-      home: const MessagingScreen(),
+      home: const MessagingScreen(userId: 'sherlyn'),
     );
   }
 }
 
 class MessagingScreen extends StatefulWidget {
-  const MessagingScreen({super.key});
+  final String userId;
+  const MessagingScreen({super.key, required this.userId});
 
   @override
   State<MessagingScreen> createState() => _MessagingScreenState();
 }
 
 class _MessagingScreenState extends State<MessagingScreen> {
-  // The Data Highway connects to the 'shared_note' key in your cloud database
-  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref('shared_note');
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref('messages');
   final TextEditingController _controller = TextEditingController();
-  
+  late final StreamSubscription<DatabaseEvent> _subscription;
+
   String _currentMessage = "Waiting for messages...";
+  String? _lastSenderId;
   bool _isCardOpen = false;
+  bool _isSending = false;
+  String? _errorText;
 
   @override
   void initState() {
     super.initState();
-    // Listen for live updates
-    _dbRef.onValue.listen((event) {
+    final lastMessageQuery = _dbRef.orderByChild('timestamp').limitToLast(1);
+    _subscription = lastMessageQuery.onValue.listen((event) {
       final data = event.snapshot.value;
-      if (data != null && data is Map) {
-        setState(() {
-          _currentMessage = data['text'] ?? "No message yet!";
-        });
-      }
+      if (data == null || data is! Map) return;
+
+      final entry = data.entries.first.value;
+      if (entry is! Map) return;
+
+      final text = entry['text'] as String?;
+      final senderId = entry['senderId'] as String?;
+      if (text == null) return;
+
+      setState(() {
+        _currentMessage = text;
+        _lastSenderId = senderId;
+        if (senderId != widget.userId) {
+          _isCardOpen = true;
+        }
+      });
+    }, onError: (error) {
+      setState(() {
+        _errorText = 'Connection error: $error';
+      });
     });
   }
 
-  // The Trigger to send data
-  void _sendNote() {
-    if (_controller.text.isNotEmpty) {
-      _dbRef.set({
-        'text': _controller.text,
+  @override
+  void dispose() {
+    _subscription.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _sendNote() async {
+    final text = _controller.text.trim();
+    if (text.isEmpty || _isSending) return;
+
+    setState(() {
+      _isSending = true;
+      _errorText = null;
+    });
+
+    try {
+      await _dbRef.push().set({
+        'text': text,
+        'senderId': widget.userId,
         'timestamp': ServerValue.timestamp,
       });
       _controller.clear();
+    } catch (e) {
+      setState(() {
+        _errorText = 'Failed to send: $e';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final viewInsets = MediaQuery.of(context).viewInsets.bottom;
+
     return Scaffold(
-      backgroundColor: Colors.grey[100], 
+      backgroundColor: Colors.grey[100],
       body: Stack(
         children: [
-          // The Messaging Card
           if (_isCardOpen)
             Positioned(
-              bottom: 90,
+              bottom: 90 + viewInsets,
               right: 20,
+              left: 20,
               child: Material(
                 elevation: 8,
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
-                  width: 300,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -91,13 +142,31 @@ class _MessagingScreenState extends State<MessagingScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Live Message:",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 1, 21, 49)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _lastSenderId != null && _lastSenderId != widget.userId
+                                ? "$_lastSenderId says:"
+                                : "New message!",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 1, 21, 49),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => setState(() => _isCardOpen = false),
+                            child: const Icon(Icons.close, size: 18),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 8),
                       Text(_currentMessage),
                       const Divider(),
+                      if (_errorText != null) ...[
+                        Text(_errorText!, style: const TextStyle(color: Colors.red, fontSize: 12)),
+                        const SizedBox(height: 4),
+                      ],
                       TextField(
                         controller: _controller,
                         maxLength: 100,
@@ -110,8 +179,14 @@ class _MessagingScreenState extends State<MessagingScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: ElevatedButton(
-                          onPressed: _sendNote,
-                          child: const Text("Send"),
+                          onPressed: _isSending ? null : _sendNote,
+                          child: _isSending
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Text("Send"),
                         ),
                       ),
                     ],
@@ -119,23 +194,23 @@ class _MessagingScreenState extends State<MessagingScreen> {
                 ),
               ),
             ),
-          // The Mascot UI Button
           Positioned(
-            bottom: 20,
-            right: 20,
-            child: FloatingActionButton(
-              onPressed: () {
+            bottom: 10,
+            right: 10,
+            child: GestureDetector(
+              onTap: () {
                 setState(() {
                   _isCardOpen = !_isCardOpen;
                 });
               },
-              backgroundColor: Colors.transparent,
-              elevation: 0, 
               child: Image.asset(
                 'assets/penguin.png',
-                width: 50,  
-                height: 50,
+                width: 150,
+                height: 150,
                 fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.emoji_emotions, size: 100);
+                },
               ),
             ),
           ),

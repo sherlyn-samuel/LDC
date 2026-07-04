@@ -40,53 +40,49 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAeEjEULqhjMPvr8NOEx8_KMxkRiecIzwM',
-    appId: '1:868318242363:android:f935c226855ae201241e1e',
-    messagingSenderId: '868318242363',
-    projectId: 'menta-ray',
-    databaseURL: 'https://menta-ray-default-rtdb.firebaseio.com',
-    storageBucket: 'menta-ray.firebasestorage.app',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD89vApCqluSKrEq_nafVOmdFO-_94GA_E',
-    appId: '1:868318242363:web:f6724be4ec136ad4241e1e',
-    messagingSenderId: '868318242363',
-    projectId: 'menta-ray',
-    authDomain: 'menta-ray.firebaseapp.com',
-    databaseURL: 'https://menta-ray-default-rtdb.firebaseio.com',
-    storageBucket: 'menta-ray.firebasestorage.app',
-    measurementId: 'G-4CD45KCZVC',
-  );
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD89vApCqluSKrEq_nafVOmdFO-_94GA_E',
-    appId: '1:868318242363:web:f6724be4ec136ad4241e1e',
-    messagingSenderId: '868318242363',
-    projectId: 'menta-ray',
-    authDomain: 'menta-ray.firebaseapp.com',
-    databaseURL: 'https://menta-ray-default-rtdb.firebaseio.com',
-    storageBucket: 'menta-ray.firebasestorage.app',
-    measurementId: 'G-4CD45KCZVC',
+    apiKey: 'AIzaSyBLrU3KAxVarkkpGUCmCkhT97yBnBLfOVc',
+    appId: '1:938809862686:web:ab957bd310e9ad24f5dc0f',
+    messagingSenderId: '938809862686',
+    projectId: 'messaging-c7c45',
+    authDomain: 'messaging-c7c45.firebaseapp.com',
+    storageBucket: 'messaging-c7c45.firebasestorage.app',
+    measurementId: 'G-MRFVSVF0M9',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD_xoDGOU-aNGdZPAI7Rjdx1FFACH8JAaA',
-    appId: '1:868318242363:ios:0dfd1c53e12ce15e241e1e',
-    messagingSenderId: '868318242363',
-    projectId: 'menta-ray',
-    databaseURL: 'https://menta-ray-default-rtdb.firebaseio.com',
-    storageBucket: 'menta-ray.firebasestorage.app',
-    iosBundleId: 'com.example.cuteMessaging',
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBbc99X_uOqwLhBp_T0SQ9HLguDV7jGiKo',
+    appId: '1:938809862686:android:ffb7f188e1936226f5dc0f',
+    messagingSenderId: '938809862686',
+    projectId: 'messaging-c7c45',
+    storageBucket: 'messaging-c7c45.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD_xoDGOU-aNGdZPAI7Rjdx1FFACH8JAaA',
-    appId: '1:868318242363:ios:0dfd1c53e12ce15e241e1e',
-    messagingSenderId: '868318242363',
-    projectId: 'menta-ray',
-    databaseURL: 'https://menta-ray-default-rtdb.firebaseio.com',
-    storageBucket: 'menta-ray.firebasestorage.app',
+    apiKey: 'AIzaSyCvPN7sd4ypilo-NXn1illQrdMM_FvCY2Q',
+    appId: '1:938809862686:ios:ca3c04fdf28ae92df5dc0f',
+    messagingSenderId: '938809862686',
+    projectId: 'messaging-c7c45',
+    storageBucket: 'messaging-c7c45.firebasestorage.app',
     iosBundleId: 'com.example.cuteMessaging',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCvPN7sd4ypilo-NXn1illQrdMM_FvCY2Q',
+    appId: '1:938809862686:ios:ca3c04fdf28ae92df5dc0f',
+    messagingSenderId: '938809862686',
+    projectId: 'messaging-c7c45',
+    storageBucket: 'messaging-c7c45.firebasestorage.app',
+    iosBundleId: 'com.example.cuteMessaging',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBLrU3KAxVarkkpGUCmCkhT97yBnBLfOVc',
+    appId: '1:938809862686:web:84ade37b7afbbb34f5dc0f',
+    messagingSenderId: '938809862686',
+    projectId: 'messaging-c7c45',
+    authDomain: 'messaging-c7c45.firebaseapp.com',
+    storageBucket: 'messaging-c7c45.firebasestorage.app',
+    measurementId: 'G-5C7HCRPFHL',
   );
 }

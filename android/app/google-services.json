@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "868318242363",
-    "firebase_url": "https://menta-ray-default-rtdb.firebaseio.com",
-    "project_id": "menta-ray",
-    "storage_bucket": "menta-ray.firebasestorage.app"
+    "project_number": "938809862686",
+    "project_id": "messaging-c7c45",
+    "storage_bucket": "messaging-c7c45.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:868318242363:android:f935c226855ae201241e1e",
+        "mobilesdk_app_id": "1:938809862686:android:ffb7f188e1936226f5dc0f",
         "android_client_info": {
           "package_name": "com.example.cute_messaging"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAeEjEULqhjMPvr8NOEx8_KMxkRiecIzwM"
+          "current_key": "AIzaSyBbc99X_uOqwLhBp_T0SQ9HLguDV7jGiKo"
         }
       ],
       "services": {

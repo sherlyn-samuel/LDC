@@ -38,8 +38,24 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+.firebase/
 
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+local.properties
+
+# Environment variables
+.env
+
+# Windows System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Emacs/Vim/Editors
+*~
+*.swp
