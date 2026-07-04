@@ -39,6 +39,14 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 .firebase/
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+*serviceAccountKey*.json
+.firebaserc
+lib/firebase_options.dart
+
 
 # Android Studio will place build artifacts here
 /android/app/debug
