@@ -41,7 +41,10 @@ class MessagingScreen extends StatefulWidget {
 }
 
 class _MessagingScreenState extends State<MessagingScreen> {
-  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref('messages');
+  final DatabaseReference _dbRef = FirebaseDatabase.instanceFor(
+    app: Firebase.app(),
+    databaseURL: 'https://ldc-m-c96ea-default-rtdb.firebaseio.com',
+  ).ref('messages');
   final TextEditingController _controller = TextEditingController();
   late final StreamSubscription<DatabaseEvent> _subscription;
 
@@ -124,76 +127,6 @@ class _MessagingScreenState extends State<MessagingScreen> {
       backgroundColor: Colors.grey[100],
       body: Stack(
         children: [
-          if (_isCardOpen)
-            Positioned(
-              bottom: 90 + viewInsets,
-              right: 20,
-              left: 20,
-              child: Material(
-                elevation: 8,
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _lastSenderId != null && _lastSenderId != widget.userId
-                                ? "$_lastSenderId says:"
-                                : "New message!",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 1, 21, 49),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => setState(() => _isCardOpen = false),
-                            child: const Icon(Icons.close, size: 18),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(_currentMessage),
-                      const Divider(),
-                      if (_errorText != null) ...[
-                        Text(_errorText!, style: const TextStyle(color: Colors.red, fontSize: 12)),
-                        const SizedBox(height: 4),
-                      ],
-                      TextField(
-                        controller: _controller,
-                        maxLength: 100,
-                        decoration: const InputDecoration(
-                          hintText: "Type a message...",
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          onPressed: _isSending ? null : _sendNote,
-                          child: _isSending
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                )
-                              : const Text("Send"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           Positioned(
             bottom: 10,
             right: 10,
@@ -214,6 +147,83 @@ class _MessagingScreenState extends State<MessagingScreen> {
               ),
             ),
           ),
+          if (_isCardOpen)
+            Positioned(
+              bottom: 170 + viewInsets,
+              right: 20,
+              left: 20,
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _lastSenderId != null && _lastSenderId != widget.userId
+                                ? "$_lastSenderId says:"
+                                : "New message!",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 1, 21, 49),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => setState(() => _isCardOpen = false),
+                            child: const Icon(Icons.close, size: 16),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(_currentMessage, style: const TextStyle(fontSize: 13)),
+                      const Divider(height: 12),
+                      if (_errorText != null) ...[
+                        Text(_errorText!, style: const TextStyle(color: Colors.red, fontSize: 11)),
+                        const SizedBox(height: 4),
+                      ],
+                      TextField(
+                        controller: _controller,
+                        maxLength: 100,
+                        style: const TextStyle(fontSize: 13),
+                        decoration: const InputDecoration(
+                          hintText: "Type a message...",
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton(
+                          onPressed: _isSending ? null : _sendNote,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          ),
+                          child: _isSending
+                              ? const SizedBox(
+                                  width: 14,
+                                  height: 14,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Text("Send", style: TextStyle(fontSize: 13)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
