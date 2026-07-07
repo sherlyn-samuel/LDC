@@ -14,16 +14,16 @@ void main() async {
     runApp(MaterialApp(home: Scaffold(body: Center(child: Text('Failed to start: $e')))));
     return;
   }
-  runApp(const MentaRayMessagingApp());
+  runApp(const LDSMessagingApp());
 }
 
-class MentaRayMessagingApp extends StatelessWidget {
-  const MentaRayMessagingApp({super.key});
+class LDSMessagingApp extends StatelessWidget {
+  const LDSMessagingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Menta-Ray Messaging',
+      title: 'LDS Messaging',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 1, 21, 49)),
       ),
